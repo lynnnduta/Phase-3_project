@@ -1,71 +1,91 @@
-from models.recipe import Recipe
-from models.ingredient import Ingredient
-from models.recipe_ingredient import RecipeIngredient
-from models.user import User
-from database.seed import create_tables
-from database.models import get_db_connection
+def display_menu():
+    print("Recipe Manager")
+    print("1. Add User")
+    print("2. Add Recipe")
+    print("3. Add Ingredient to Recipe")
+    print("4. View Users")
+    print("5. View Recipes")
+    print("6. View Ingredients")
+    print("7. Delete User")
+    print("8. Delete Recipe")
+    print("9. Delete Ingredient")
+    print("10. Exit")
 
-class RecipeManagerCLI:
-    def display_menu(self):
-        print("Recipe Manager")
-        print("1. Add Recipe")
-        print("2. View Recipes")
-        print("3. Add Ingredient")
-        print("4. View Ingredients")
-        print("5. Add User")
-        print("6. View Users")
-        print("7. Exit")
+def add_user():
+    username = input("Enter username: ")
+    email = input("Enter email: ")
+    User.create(username, email)
+    print("User added successfully.")
 
-    def run(self):
-        while True:
-            self.display_menu()
-            choice = input("Enter your choice: ")
-            if choice == '1':
-                self.add_recipe()
-            elif choice == '2':
-                self.view_recipes()
-            elif choice == '3':
-                self.add_ingredient()
-            elif choice == '4':
-                self.view_ingredients()
-            elif choice == '5':
-                self.add_user()
-            elif choice == '6':
-                self.view_users()
-            elif choice == '7':
-                break
-            else:
-                print("Invalid choice. Please try again.")
+def add_recipe():
+    name = input("Enter recipe name: ")
+    instructions = input("Enter recipe instructions: ")
+    user_id = int(input("Enter user ID: "))
+    Recipe.create(name, instructions, user_id)
+    print("Recipe added successfully.")
 
-    def add_recipe(self):
-        name = input("Enter recipe name: ")
-        instructions = input("Enter recipe instructions: ")
-        recipe = Recipe(name, instructions)
-        print("Recipe added successfully.")
+def add_ingredient():
+    recipe_id = int(input("Enter recipe ID: "))
+    ingredient = input("Enter ingredient: ")
+    RecipeIngredient.create(recipe_id, ingredient)
+    print("Ingredient added successfully.")
 
-    def view_recipes(self):
-        print("Recipes:")
-        # Fetch and display all recipes from the database
+def view_users():
+    users = User.get_all()
+    for user in users:
+        print(user)
 
-    def add_ingredient(self):
-        name = input("Enter ingredient name: ")
-        ingredient = Ingredient(name)
-        print("Ingredient added successfully.")
+def view_recipes():
+    recipes = Recipe.get_all()
+    for recipe in recipes:
+        print(recipe)
 
-    def view_ingredients(self):
-        print("Ingredients:")
-        # Fetch and display all ingredients from the database
+def view_ingredients():
+    ingredients = RecipeIngredient.get_all()
+    for ingredient in ingredients:
+        print(ingredient)
 
-    def add_user(self):
-        username = input("Enter username: ")
-        email = input("Enter email: ")
-        user = User(username, email)
-        print("User added successfully.")
+def delete_user():
+    user_id = int(input("Enter user ID to delete: "))
+    User.delete(user_id)
+    print("User deleted successfully.")
 
-    def view_users(self):
-        print("Users:")
-        # Fetch and display all users from the database
+def delete_recipe():
+    recipe_id = int(input("Enter recipe ID to delete: "))
+    Recipe.delete(recipe_id)
+    print("Recipe deleted successfully.")
+
+def delete_ingredient():
+    ingredient_id = int(input("Enter ingredient ID to delete: "))
+    RecipeIngredient.delete(ingredient_id)
+    print("Ingredient deleted successfully.")
+
+def run():
+    while True:
+        display_menu()
+        choice = input("Enter your choice: ")
+        if choice == '1':
+            add_user()
+        elif choice == '2':
+            add_recipe()
+        elif choice == '3':
+            add_ingredient()
+        elif choice == '4':
+            view_users()
+        elif choice == '5':
+            view_recipes()
+        elif choice == '6':
+            view_ingredients()
+        elif choice == '7':
+            delete_user()
+        elif choice == '8':
+            delete_recipe()
+        elif choice == '9':
+            delete_ingredient()
+        elif choice == '10':
+            break
+        else:
+            print("Invalid choice. Please try again.")
 
 if __name__ == "__main__":
-    app = RecipeManagerCLI()
-    app.run()
+    run()
